@@ -15,9 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use std::{fmt::Display, iter::Peekable, str::Chars, sync::Arc};
-
 use crate::{ArrowError, DataType, Field, IntervalUnit, TimeUnit};
+use alloc::{
+    boxed::Box,
+    format,
+    string::{String, ToString},
+    sync::Arc,
+};
+use core::{fmt::Display, iter::Peekable, str::Chars};
 
 pub(crate) fn parse_data_type(val: &str) -> ArrowResult<DataType> {
     Parser::new(val).parse()
@@ -549,7 +554,7 @@ enum Token {
 }
 
 impl Display for Token {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Token::SimpleType(t) => write!(f, "{t}"),
             Token::List => write!(f, "List"),

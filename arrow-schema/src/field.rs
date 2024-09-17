@@ -15,15 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use crate::error::ArrowError;
-use std::cmp::Ordering;
-use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
-use std::sync::Arc;
-
-use crate::datatype::DataType;
-use crate::schema::SchemaBuilder;
-use crate::{Fields, UnionFields, UnionMode};
+use crate::{
+    datatype::DataType, error::ArrowError, schema::SchemaBuilder, Fields, UnionFields, UnionMode,
+};
+use alloc::{boxed::Box, format, string::String, sync::Arc, vec, vec::Vec};
+use core::{
+    cmp::Ordering,
+    hash::{Hash, Hasher},
+};
+use hashbrown::HashMap;
 
 /// A reference counted [`Field`]
 pub type FieldRef = Arc<Field>;
@@ -582,10 +582,10 @@ impl Field {
     ///
     /// Includes the size of `Self`.
     pub fn size(&self) -> usize {
-        std::mem::size_of_val(self) - std::mem::size_of_val(&self.data_type)
+        core::mem::size_of_val(self) - core::mem::size_of_val(&self.data_type)
             + self.data_type.size()
             + self.name.capacity()
-            + (std::mem::size_of::<(String, String)>() * self.metadata.capacity())
+            + (core::mem::size_of::<(String, String)>() * self.metadata.capacity())
             + self
                 .metadata
                 .iter()
@@ -595,8 +595,8 @@ impl Field {
 }
 
 // TODO: improve display with crate https://crates.io/crates/derive_more ?
-impl std::fmt::Display for Field {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl core::fmt::Display for Field {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{self:?}")
     }
 }

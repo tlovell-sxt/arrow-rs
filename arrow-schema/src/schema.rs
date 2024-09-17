@@ -15,14 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use std::collections::HashMap;
-use std::fmt;
-use std::hash::Hash;
-use std::sync::Arc;
-
-use crate::error::ArrowError;
-use crate::field::Field;
-use crate::{FieldRef, Fields};
+use crate::{error::ArrowError, field::Field, FieldRef, Fields};
+use alloc::{
+    fmt, format,
+    string::{String, ToString},
+    sync::Arc,
+    vec::Vec,
+};
+use core::hash::Hash;
+use hashbrown::HashMap;
 
 /// A builder to facilitate building a [`Schema`] from iteratively from [`FieldRef`]
 #[derive(Debug, Default)]
@@ -478,7 +479,7 @@ impl fmt::Display for Schema {
 // need to implement `Hash` manually because `HashMap` implement Eq but no `Hash`
 #[allow(clippy::derived_hash_with_manual_eq)]
 impl Hash for Schema {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         self.fields.hash(state);
 
         // ensure deterministic key order
@@ -493,10 +494,8 @@ impl Hash for Schema {
 
 #[cfg(test)]
 mod tests {
-    use crate::datatype::DataType;
-    use crate::{TimeUnit, UnionMode};
-
     use super::*;
+    use crate::{datatype::DataType, TimeUnit, UnionMode};
 
     #[test]
     #[cfg(feature = "serde")]

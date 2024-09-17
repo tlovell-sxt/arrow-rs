@@ -16,10 +16,14 @@
 // under the License.
 
 //! Defines `ArrowError` for representing failures in various Arrow operations.
-use std::fmt::{Debug, Display, Formatter};
-use std::io::Write;
-
-use std::error::Error;
+use alloc::{
+    boxed::Box,
+    string::{String, ToString},
+};
+use core::{
+    error::Error,
+    fmt::{Debug, Display, Formatter},
+};
 
 /// Many different operations in the `arrow` crate return this error type.
 #[derive(Debug)]
@@ -36,7 +40,6 @@ pub enum ArrowError {
     ArithmeticOverflow(String),
     CsvError(String),
     JsonError(String),
-    IoError(String, std::io::Error),
     IpcError(String),
     InvalidArgumentError(String),
     ParquetError(String),
@@ -53,32 +56,20 @@ impl ArrowError {
     }
 }
 
-impl From<std::io::Error> for ArrowError {
-    fn from(error: std::io::Error) -> Self {
-        ArrowError::IoError(error.to_string(), error)
-    }
-}
-
-impl From<std::str::Utf8Error> for ArrowError {
-    fn from(error: std::str::Utf8Error) -> Self {
+impl From<core::str::Utf8Error> for ArrowError {
+    fn from(error: core::str::Utf8Error) -> Self {
         ArrowError::ParseError(error.to_string())
     }
 }
 
-impl From<std::string::FromUtf8Error> for ArrowError {
-    fn from(error: std::string::FromUtf8Error) -> Self {
+impl From<alloc::string::FromUtf8Error> for ArrowError {
+    fn from(error: alloc::string::FromUtf8Error) -> Self {
         ArrowError::ParseError(error.to_string())
-    }
-}
-
-impl<W: Write> From<std::io::IntoInnerError<W>> for ArrowError {
-    fn from(error: std::io::IntoInnerError<W>) -> Self {
-        ArrowError::IoError(error.to_string(), error.into())
     }
 }
 
 impl Display for ArrowError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         match self {
             ArrowError::NotYetImplemented(source) => {
                 write!(f, "Not yet implemented: {}", &source)
@@ -93,7 +84,6 @@ impl Display for ArrowError {
             ArrowError::DivideByZero => write!(f, "Divide by zero error"),
             ArrowError::CsvError(desc) => write!(f, "Csv error: {desc}"),
             ArrowError::JsonError(desc) => write!(f, "Json error: {desc}"),
-            ArrowError::IoError(desc, _) => write!(f, "Io error: {desc}"),
             ArrowError::IpcError(desc) => write!(f, "Ipc error: {desc}"),
             ArrowError::InvalidArgumentError(desc) => {
                 write!(f, "Invalid argument error: {desc}")
@@ -118,7 +108,6 @@ impl Error for ArrowError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             ArrowError::ExternalError(source) => Some(source.as_ref()),
-            ArrowError::IoError(_, source) => Some(source),
             _ => None,
         }
     }

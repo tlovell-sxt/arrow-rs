@@ -15,10 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use std::ops::Deref;
-use std::sync::Arc;
-
 use crate::{ArrowError, DataType, Field, FieldRef, SchemaBuilder};
+use alloc::{boxed::Box, format, sync::Arc, vec::Vec};
+use core::ops::Deref;
 
 /// A cheaply cloneable, owned slice of [`FieldRef`]
 ///
@@ -59,8 +58,8 @@ use crate::{ArrowError, DataType, Field, FieldRef, SchemaBuilder};
 #[cfg_attr(feature = "serde", serde(transparent))]
 pub struct Fields(Arc<[FieldRef]>);
 
-impl std::fmt::Debug for Fields {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Debug for Fields {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.0.as_ref().fmt(f)
     }
 }
@@ -74,7 +73,7 @@ impl Fields {
     /// Return size of this instance in bytes.
     pub fn size(&self) -> usize {
         self.iter()
-            .map(|field| field.size() + std::mem::size_of::<FieldRef>())
+            .map(|field| field.size() + core::mem::size_of::<FieldRef>())
             .sum()
     }
 
@@ -337,7 +336,7 @@ impl Deref for Fields {
 
 impl<'a> IntoIterator for &'a Fields {
     type Item = &'a FieldRef;
-    type IntoIter = std::slice::Iter<'a, FieldRef>;
+    type IntoIter = core::slice::Iter<'a, FieldRef>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.0.iter()
@@ -350,8 +349,8 @@ impl<'a> IntoIterator for &'a Fields {
 #[cfg_attr(feature = "serde", serde(transparent))]
 pub struct UnionFields(Arc<[(i8, FieldRef)]>);
 
-impl std::fmt::Debug for UnionFields {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Debug for UnionFields {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.0.as_ref().fmt(f)
     }
 }
@@ -405,7 +404,7 @@ impl UnionFields {
     /// Return size of this instance in bytes.
     pub fn size(&self) -> usize {
         self.iter()
-            .map(|(_, field)| field.size() + std::mem::size_of::<(i8, FieldRef)>())
+            .map(|(_, field)| field.size() + core::mem::size_of::<(i8, FieldRef)>())
             .sum()
     }
 

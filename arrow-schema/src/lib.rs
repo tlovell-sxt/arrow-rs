@@ -17,6 +17,13 @@
 
 //! Arrow logical types
 
+#![warn(clippy::std_instead_of_core)]
+#![warn(clippy::std_instead_of_alloc)]
+#![warn(clippy::alloc_instead_of_core)]
+#![no_std]
+
+extern crate alloc;
+
 mod datatype;
 pub use datatype::*;
 mod datatype_parse;
@@ -27,8 +34,8 @@ pub use field::*;
 mod fields;
 pub use fields::*;
 mod schema;
+use core::ops;
 pub use schema::*;
-use std::ops;
 
 #[cfg(feature = "ffi")]
 pub mod ffi;
