@@ -18,6 +18,7 @@
 use super::{Extend, _MutableArrayData, utils::resize_for_bits};
 use crate::bit_mask::set_bits;
 use crate::ArrayData;
+use alloc::boxed::Box;
 
 pub(super) fn build_extend(array: &ArrayData) -> Extend {
     let values = array.buffers()[0].as_slice();

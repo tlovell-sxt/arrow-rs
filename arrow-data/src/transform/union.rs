@@ -17,6 +17,7 @@
 
 use super::{Extend, _MutableArrayData};
 use crate::ArrayData;
+use alloc::boxed::Box;
 
 pub(super) fn build_extend_sparse(array: &ArrayData) -> Extend {
     let type_ids = array.buffer::<i8>(0);

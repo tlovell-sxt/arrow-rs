@@ -17,6 +17,7 @@
 
 use super::{Extend, _MutableArrayData};
 use crate::ArrayData;
+use alloc::boxed::Box;
 
 pub(super) fn build_extend(_: &ArrayData) -> Extend {
     Box::new(

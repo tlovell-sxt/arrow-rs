@@ -17,12 +17,13 @@
 
 use super::{data::new_buffers, ArrayData, ArrayDataBuilder, ByteView};
 use crate::bit_mask::set_bits;
+use alloc::{boxed::Box, vec, vec::Vec};
 use arrow_buffer::buffer::{BooleanBuffer, NullBuffer};
 use arrow_buffer::{bit_util, i256, ArrowNativeType, Buffer, MutableBuffer};
 use arrow_schema::{ArrowError, DataType, IntervalUnit, UnionMode};
+use core::mem;
 use half::f16;
 use num::Integer;
-use std::mem;
 
 mod boolean;
 mod fixed_binary;
@@ -172,8 +173,8 @@ pub struct MutableArrayData<'a> {
     extend_nulls: ExtendNulls,
 }
 
-impl<'a> std::fmt::Debug for MutableArrayData<'a> {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl<'a> core::fmt::Debug for MutableArrayData<'a> {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         // ignores the closures.
         f.debug_struct("MutableArrayData")
             .field("data", &self.data)
@@ -810,8 +811,8 @@ impl<'a> MutableArrayData<'a> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use alloc::sync::Arc;
     use arrow_schema::Field;
-    use std::sync::Arc;
 
     #[test]
     fn test_list_append_with_capacities() {

@@ -19,6 +19,13 @@
 //!
 //! For a higher-level, strongly-typed interface see [arrow_array](https://docs.rs/arrow_array)
 
+#![warn(clippy::std_instead_of_core)]
+#![warn(clippy::std_instead_of_alloc)]
+#![warn(clippy::alloc_instead_of_core)]
+#![cfg_attr(not(feature = "std"), no_std)]
+
+extern crate alloc;
+
 mod data;
 pub use data::*;
 

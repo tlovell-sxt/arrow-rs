@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+use alloc::format;
 use arrow_buffer::i256;
 use arrow_schema::ArrowError;
 
