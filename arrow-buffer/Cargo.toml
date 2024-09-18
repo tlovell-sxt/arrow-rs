@@ -35,7 +35,7 @@ bench = false
 
 [dependencies]
 bytes = { version = "1.4" }
-num = { version = "0.4", default-features = false, features = ["std"] }
+num = { version = "0.4", default-features = false }
 half = { version = "2.1", default-features = false }
 
 [dev-dependencies]
@@ -43,6 +43,10 @@ criterion = { version = "0.5", default-features = false }
 rand = { version = "0.8", default-features = false, features = ["std", "std_rng"] }
 
 [build-dependencies]
+
+[features]
+default = ["std"]
+std = ["num/std"]
 
 [[bench]]
 name = "i256"
