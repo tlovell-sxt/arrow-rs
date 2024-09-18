@@ -19,6 +19,12 @@
 
 // used by [`buffer::mutable::dangling_ptr`]
 #![cfg_attr(miri, feature(strict_provenance))]
+#![warn(clippy::std_instead_of_core)]
+#![warn(clippy::std_instead_of_alloc)]
+#![warn(clippy::alloc_instead_of_core)]
+#![cfg_attr(not(feature = "std"), no_std)]
+
+extern crate alloc;
 
 pub mod allocation;
 pub mod buffer;

@@ -16,7 +16,7 @@
 // under the License.
 
 use crate::{bit_mask, bit_util, BooleanBuffer, Buffer, MutableBuffer};
-use std::ops::Range;
+use core::ops::Range;
 
 /// Builder for [`BooleanBuffer`]
 #[derive(Debug)]
@@ -220,8 +220,8 @@ impl BooleanBufferBuilder {
     /// Creates a [`BooleanBuffer`]
     #[inline]
     pub fn finish(&mut self) -> BooleanBuffer {
-        let buf = std::mem::replace(&mut self.buffer, MutableBuffer::new(0));
-        let len = std::mem::replace(&mut self.len, 0);
+        let buf = core::mem::replace(&mut self.buffer, MutableBuffer::new(0));
+        let len = core::mem::replace(&mut self.len, 0);
         BooleanBuffer::new(buf.into(), 0, len)
     }
 
@@ -393,7 +393,7 @@ mod tests {
 
         let src_len = 32;
         let (src, compacted_src) = {
-            let src: Vec<_> = std::iter::from_fn(|| Some(rng.next_u32() & 1 == 0))
+            let src: Vec<_> = core::iter::from_fn(|| Some(rng.next_u32() & 1 == 0))
                 .take(src_len)
                 .collect();
 

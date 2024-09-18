@@ -15,10 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use std::alloc::Layout;
-use std::fmt::Debug;
-use std::ptr::NonNull;
-use std::sync::Arc;
+use alloc::sync::Arc;
+use alloc::vec::Vec;
+use core::alloc::Layout;
+use core::fmt::Debug;
+use core::ptr::NonNull;
 
 use crate::allocation::{Allocation, Deallocation, ALIGNMENT};
 use crate::util::bit_chunk_iterator::{BitChunks, UnalignedBitChunk};
@@ -93,7 +94,7 @@ impl Buffer {
     /// Initializes a [Buffer] from a slice of items.
     pub fn from_slice_ref<U: ArrowNativeType, T: AsRef<[U]>>(items: T) -> Self {
         let slice = items.as_ref();
-        let capacity = std::mem::size_of_val(slice);
+        let capacity = core::mem::size_of_val(slice);
         let mut buffer = MutableBuffer::with_capacity(capacity);
         buffer.extend_from_slice(slice);
         buffer.into()
@@ -175,7 +176,7 @@ impl Buffer {
 
     /// Returns the byte slice stored in this buffer
     pub fn as_slice(&self) -> &[u8] {
-        unsafe { std::slice::from_raw_parts(self.ptr, self.length) }
+        unsafe { core::slice::from_raw_parts(self.ptr, self.length) }
     }
 
     pub(crate) fn deallocation(&self) -> &Deallocation {
@@ -322,7 +323,7 @@ impl Buffer {
             return Err(self); // Data is offset
         }
 
-        let v_capacity = layout.size() / std::mem::size_of::<T>();
+        let v_capacity = layout.size() / core::mem::size_of::<T>();
         match Layout::array::<T>(v_capacity) {
             Ok(expected) if layout == &expected => {}
             _ => return Err(self), // Incorrect layout
@@ -330,12 +331,12 @@ impl Buffer {
 
         let length = self.length;
         let ptr = self.ptr;
-        let v_len = self.length / std::mem::size_of::<T>();
+        let v_len = self.length / core::mem::size_of::<T>();
 
         Arc::try_unwrap(self.data)
             .map(|bytes| unsafe {
                 let ptr = bytes.ptr().as_ptr() as _;
-                std::mem::forget(bytes);
+                core::mem::forget(bytes);
                 // Safety
                 // Verified that bytes layout matches that of Vec
                 Vec::from_raw_parts(ptr, v_len, v_capacity)
@@ -392,11 +393,11 @@ impl FromIterator<bool> for Buffer {
     }
 }
 
-impl std::ops::Deref for Buffer {
+impl core::ops::Deref for Buffer {
     type Target = [u8];
 
     fn deref(&self) -> &[u8] {
-        unsafe { std::slice::from_raw_parts(self.as_ptr(), self.len()) }
+        unsafe { core::slice::from_raw_parts(self.as_ptr(), self.len()) }
     }
 }
 
@@ -466,7 +467,7 @@ impl<T: ArrowNativeType> FromIterator<T> for Buffer {
 #[cfg(test)]
 mod tests {
     use crate::i256;
-    use std::panic::{RefUnwindSafe, UnwindSafe};
+    use core::panic::{RefUnwindSafe, UnwindSafe};
     use std::thread;
 
     use super::*;
@@ -696,7 +697,7 @@ mod tests {
         let buffer = unsafe {
             Buffer::from_custom_allocation(
                 NonNull::new_unchecked(vector.as_mut_ptr() as *mut u8),
-                vector.len() * std::mem::size_of::<i32>(),
+                vector.len() * core::mem::size_of::<i32>(),
                 Arc::new(vector),
             )
         };
@@ -704,7 +705,7 @@ mod tests {
         let slice = buffer.typed_data::<i32>();
         assert_eq!(slice, &[1, 2, 3, 4, 5]);
 
-        let buffer = buffer.slice(std::mem::size_of::<i32>());
+        let buffer = buffer.slice(core::mem::size_of::<i32>());
 
         let slice = buffer.typed_data::<i32>();
         assert_eq!(slice, &[2, 3, 4, 5]);
@@ -842,7 +843,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "capacity overflow")]
     fn test_from_iter_overflow() {
-        let iter_len = usize::MAX / std::mem::size_of::<u64>() + 1;
-        let _ = Buffer::from_iter(std::iter::repeat(0_u64).take(iter_len));
+        let iter_len = usize::MAX / core::mem::size_of::<u64>() + 1;
+        let _ = Buffer::from_iter(core::iter::repeat(0_u64).take(iter_len));
     }
 }

@@ -20,8 +20,8 @@
 //! Note that this is a low-level functionality of this crate.
 
 use core::slice;
-use std::ptr::NonNull;
-use std::{fmt::Debug, fmt::Formatter};
+use core::ptr::NonNull;
+use core::{fmt::Debug, fmt::Formatter};
 
 use crate::allocation::Deallocation;
 
@@ -113,7 +113,7 @@ impl Drop for Bytes {
         match &self.deallocation {
             Deallocation::Standard(layout) => match layout.size() {
                 0 => {} // Nothing to do
-                _ => unsafe { std::alloc::dealloc(self.ptr.as_ptr(), *layout) },
+                _ => unsafe { alloc::alloc::dealloc(self.ptr.as_ptr(), *layout) },
             },
             // The automatic drop implementation will free the memory once the reference count reaches zero
             Deallocation::Custom(_allocation, _size) => (),
@@ -121,7 +121,7 @@ impl Drop for Bytes {
     }
 }
 
-impl std::ops::Deref for Bytes {
+impl core::ops::Deref for Bytes {
     type Target = [u8];
 
     fn deref(&self) -> &[u8] {
@@ -136,7 +136,7 @@ impl PartialEq for Bytes {
 }
 
 impl Debug for Bytes {
-    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         write!(f, "Bytes {{ ptr: {:?}, len: {}, data: ", self.ptr, self.len,)?;
 
         f.debug_list().entries(self.iter()).finish()?;
@@ -151,7 +151,7 @@ impl From<bytes::Bytes> for Bytes {
         Self {
             len,
             ptr: NonNull::new(value.as_ptr() as _).unwrap(),
-            deallocation: Deallocation::Custom(std::sync::Arc::new(value), len),
+            deallocation: Deallocation::Custom(alloc::sync::Arc::new(value), len),
         }
     }
 }

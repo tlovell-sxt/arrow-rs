@@ -15,9 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use std::ops::Deref;
+use core::ops::Deref;
 
 use crate::{ArrowNativeType, OffsetBuffer};
+use alloc::vec::Vec;
 
 #[derive(Debug)]
 pub struct OffsetBufferBuilder<O: ArrowNativeType> {

@@ -169,7 +169,7 @@ impl<'a> Iterator for BitSliceIterator<'a> {
                 None => {
                     return Some((
                         (start_chunk + start_bit as i64) as usize,
-                        std::mem::replace(&mut self.len, 0),
+                        core::mem::replace(&mut self.len, 0),
                     ));
                 }
             }

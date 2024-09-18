@@ -22,7 +22,8 @@ use crate::{
     BooleanBufferBuilder, Buffer, MutableBuffer,
 };
 
-use std::ops::{BitAnd, BitOr, BitXor, Not};
+use alloc::vec::Vec;
+use core::ops::{BitAnd, BitOr, BitXor, Not};
 
 /// A slice-able [`Buffer`] containing bit-packed booleans
 #[derive(Debug, Clone, Eq)]

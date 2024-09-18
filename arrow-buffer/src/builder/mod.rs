@@ -26,7 +26,8 @@ pub use null::*;
 pub use offset::*;
 
 use crate::{ArrowNativeType, Buffer, MutableBuffer};
-use std::{iter, marker::PhantomData};
+use alloc::vec::Vec;
+use core::{iter, marker::PhantomData};
 
 /// Builder for creating a [Buffer] object.
 ///
@@ -77,7 +78,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// ```
     #[inline]
     pub fn new(capacity: usize) -> Self {
-        let buffer = MutableBuffer::new(capacity * std::mem::size_of::<T>());
+        let buffer = MutableBuffer::new(capacity * core::mem::size_of::<T>());
 
         Self {
             buffer,
@@ -91,7 +92,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
         let buffer_len = buffer.len();
         Self {
             buffer,
-            len: buffer_len / std::mem::size_of::<T>(),
+            len: buffer_len / core::mem::size_of::<T>(),
             _marker: PhantomData,
         }
     }
@@ -135,7 +136,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// functions.
     pub fn capacity(&self) -> usize {
         let byte_capacity = self.buffer.capacity();
-        byte_capacity / std::mem::size_of::<T>()
+        byte_capacity / core::mem::size_of::<T>()
     }
 
     /// Increases the number of elements in the internal buffer by `n`
@@ -157,7 +158,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// ```
     #[inline]
     pub fn advance(&mut self, i: usize) {
-        self.buffer.extend_zeros(i * std::mem::size_of::<T>());
+        self.buffer.extend_zeros(i * core::mem::size_of::<T>());
         self.len += i;
     }
 
@@ -175,7 +176,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// ```
     #[inline]
     pub fn reserve(&mut self, n: usize) {
-        self.buffer.reserve(n * std::mem::size_of::<T>());
+        self.buffer.reserve(n * core::mem::size_of::<T>());
     }
 
     /// Appends a value of type `T` into the builder,
@@ -231,7 +232,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// assert_eq!(builder.as_slice(), &[0, 0, 0])
     #[inline]
     pub fn append_n_zeroed(&mut self, n: usize) {
-        self.buffer.extend_zeros(n * std::mem::size_of::<T>());
+        self.buffer.extend_zeros(n * core::mem::size_of::<T>());
         self.len += n;
     }
 
@@ -271,7 +272,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
         // - MutableBuffer is aligned and initialized for len elements of T
         // - MutableBuffer corresponds to a single allocation
         // - MutableBuffer does not support modification whilst active immutable borrows
-        unsafe { std::slice::from_raw_parts(self.buffer.as_ptr() as _, self.len) }
+        unsafe { core::slice::from_raw_parts(self.buffer.as_ptr() as _, self.len) }
     }
 
     /// View the contents of this buffer as a mutable slice
@@ -296,7 +297,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
         // - MutableBuffer is aligned and initialized for len elements of T
         // - MutableBuffer corresponds to a single allocation
         // - MutableBuffer does not support modification whilst active immutable borrows
-        unsafe { std::slice::from_raw_parts_mut(self.buffer.as_mut_ptr() as _, self.len) }
+        unsafe { core::slice::from_raw_parts_mut(self.buffer.as_mut_ptr() as _, self.len) }
     }
 
     /// Shorten this BufferBuilder to `len` items
@@ -321,7 +322,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// ```
     #[inline]
     pub fn truncate(&mut self, len: usize) {
-        self.buffer.truncate(len * std::mem::size_of::<T>());
+        self.buffer.truncate(len * core::mem::size_of::<T>());
         self.len = len;
     }
 
@@ -355,7 +356,7 @@ impl<T: ArrowNativeType> BufferBuilder<T> {
     /// ```
     #[inline]
     pub fn finish(&mut self) -> Buffer {
-        let buf = std::mem::take(&mut self.buffer);
+        let buf = core::mem::take(&mut self.buffer);
         self.len = 0;
         buf.into()
     }
@@ -392,7 +393,7 @@ impl<T: ArrowNativeType> FromIterator<T> for BufferBuilder<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::mem;
+    use core::mem;
 
     #[test]
     fn default() {

@@ -17,12 +17,12 @@
 
 use crate::arith::derive_arith;
 use crate::bigint::div::div_rem;
+use core::cmp::Ordering;
+use core::num::ParseIntError;
+use core::ops::{BitAnd, BitOr, BitXor, Neg, Shl, Shr};
+use core::str::FromStr;
 use num::cast::AsPrimitive;
 use num::{BigInt, FromPrimitive, ToPrimitive};
-use std::cmp::Ordering;
-use std::num::ParseIntError;
-use std::ops::{BitAnd, BitOr, BitXor, Neg, Shl, Shr};
-use std::str::FromStr;
 
 mod div;
 
@@ -36,12 +36,12 @@ impl From<ParseIntError> for ParseI256Error {
     }
 }
 
-impl std::fmt::Display for ParseI256Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for ParseI256Error {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "Failed to parse as i256")
     }
 }
-impl std::error::Error for ParseI256Error {}
+impl core::error::Error for ParseI256Error {}
 
 /// Error returned by i256::DivRem
 enum DivRemError {
@@ -60,14 +60,14 @@ pub struct i256 {
     high: i128,
 }
 
-impl std::fmt::Debug for i256 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Debug for i256 {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{self}")
     }
 }
 
-impl std::fmt::Display for i256 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for i256 {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", BigInt::from_signed_bytes_le(&self.to_le_bytes()))
     }
 }

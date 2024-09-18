@@ -34,7 +34,7 @@ pub fn set_bits(
 
     let mut bits_to_align = offset_write % 8;
     if bits_to_align > 0 {
-        bits_to_align = std::cmp::min(len, 8 - bits_to_align);
+        bits_to_align = core::cmp::min(len, 8 - bits_to_align);
     }
     let mut write_byte_index = ceil(offset_write + bits_to_align, 8);
 
