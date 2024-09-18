@@ -20,7 +20,7 @@ use std::fmt::Debug;
 use std::ptr::NonNull;
 use std::sync::Arc;
 
-use crate::alloc::{Allocation, Deallocation, ALIGNMENT};
+use crate::allocation::{Allocation, Deallocation, ALIGNMENT};
 use crate::util::bit_chunk_iterator::{BitChunks, UnalignedBitChunk};
 use crate::BufferBuilder;
 use crate::{bytes::Bytes, native::ArrowNativeType};

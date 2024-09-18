@@ -58,7 +58,7 @@ impl Debug for Deallocation {
 
 #[cfg(test)]
 mod tests {
-    use crate::alloc::Deallocation;
+    use crate::allocation::Deallocation;
 
     #[test]
     fn test_size_of_deallocation() {

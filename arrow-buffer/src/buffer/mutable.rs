@@ -19,7 +19,7 @@ use std::alloc::{handle_alloc_error, Layout};
 use std::mem;
 use std::ptr::NonNull;
 
-use crate::alloc::{Deallocation, ALIGNMENT};
+use crate::allocation::{Deallocation, ALIGNMENT};
 use crate::{
     bytes::Bytes,
     native::{ArrowNativeType, ToByteSlice},

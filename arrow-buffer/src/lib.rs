@@ -20,7 +20,7 @@
 // used by [`buffer::mutable::dangling_ptr`]
 #![cfg_attr(miri, feature(strict_provenance))]
 
-pub mod alloc;
+pub mod allocation;
 pub mod buffer;
 pub use buffer::*;
 

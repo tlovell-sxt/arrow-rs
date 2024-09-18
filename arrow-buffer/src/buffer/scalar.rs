@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-use crate::alloc::Deallocation;
+use crate::allocation::Deallocation;
 use crate::buffer::Buffer;
 use crate::native::ArrowNativeType;
 use crate::{BufferBuilder, MutableBuffer, OffsetBuffer};

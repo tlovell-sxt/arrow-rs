@@ -23,7 +23,7 @@ use core::slice;
 use std::ptr::NonNull;
 use std::{fmt::Debug, fmt::Formatter};
 
-use crate::alloc::Deallocation;
+use crate::allocation::Deallocation;
 
 /// A continuous, fixed-size, immutable memory region that knows how to de-allocate itself.
 ///

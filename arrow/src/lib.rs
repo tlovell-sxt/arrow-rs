@@ -368,7 +368,7 @@
 #![allow(rustdoc::invalid_html_tags)]
 pub use arrow_array::{downcast_dictionary_array, downcast_primitive_array};
 
-pub use arrow_buffer::{alloc, buffer};
+pub use arrow_buffer::{allocation, buffer};
 
 pub mod array;
 pub mod compute;
