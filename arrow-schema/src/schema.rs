@@ -222,7 +222,7 @@ impl Schema {
     ///
     /// ```
     /// # use arrow_schema::*;
-    /// # use std::collections::HashMap;
+    /// use hashbrown::HashMap;
     ///
     /// let field_a = Field::new("a", DataType::Int64, false);
     /// let field_b = Field::new("b", DataType::Boolean, false);

@@ -34,11 +34,14 @@ path = "src/lib.rs"
 bench = false
 
 [dependencies]
-serde = { version = "1.0", default-features = false, features = ["derive", "std", "rc"], optional = true }
+serde = { version = "1.0", default-features = false, features = ["derive", "rc"], optional = true }
 bitflags = { version = "2.0.0", default-features = false, optional = true }
 hashbrown = { version = "0.13.2", default-features = false, features = ["ahash"] }
 
 [features]
+default = ["std"]
+std = []
+serde = ["dep:serde", "hashbrown/serde"]
 # Enable ffi support
 ffi = ["bitflags"]
 
